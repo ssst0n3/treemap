@@ -5,6 +5,10 @@ import (
 	"testing"
 )
 
+func TestListRootNodes(t *testing.T) {
+	spew.Dump(ListRootNodes())
+}
+
 func TestTreeNodes(t *testing.T) {
 	spew.Dump(TreeNodes(1))
 }

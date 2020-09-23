@@ -19,12 +19,19 @@ type WithId struct {
 	Node
 }
 
-type NodeRecursive struct {
+type Recursive struct {
 	WithId
-	Sub []NodeRecursive
+	Sub []Recursive
+}
+
+type CreateBody struct {
+	Node
+	Parent uint `json:"parent"`
 }
 
 const (
 	TableNameNode = "node"
+	ColumnNameNodeName = "name"
+	ColumnNameNodeChildren = "children"
 	ColumnNameNodeNodeType = "node_type"
 )
