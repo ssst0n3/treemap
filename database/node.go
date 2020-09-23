@@ -32,22 +32,26 @@ func TreeNodes(id uint) (node.Recursive, error) {
 		return node.Recursive{}, err
 	} else {
 		var children []uint
-		if err := json.Unmarshal([]byte(nodeRecursive.Children), &children); err != nil {
-			awesome_error.CheckErr(err)
-			return node.Recursive{}, err
-		} else {
-			for _, id := range children {
-				if subNode, err := TreeNodes(id); err != nil {
-					awesome_error.CheckErr(err)
-					return node.Recursive{}, err
-				} else {
-					nodeRecursive.Sub = append(nodeRecursive.Sub, subNode)
+		if len(nodeRecursive.Children) > 0 {
+			if err := json.Unmarshal([]byte(nodeRecursive.Children), &children); err != nil {
+				awesome_error.CheckErr(err)
+				return node.Recursive{}, err
+			} else {
+				for _, id := range children {
+					if subNode, err := TreeNodes(id); err != nil {
+						awesome_error.CheckErr(err)
+						return node.Recursive{}, err
+					} else {
+						nodeRecursive.Sub = append(nodeRecursive.Sub, subNode)
+					}
 				}
+				if len(nodeRecursive.Sub) == 0 {
+					nodeRecursive.Sub = []node.Recursive{}
+				}
+				return nodeRecursive, nil
 			}
-			if len(nodeRecursive.Sub) == 0 {
-				nodeRecursive.Sub = []node.Recursive{}
-			}
-			return nodeRecursive, nil
+		} else {
+			return node.Recursive{}, err
 		}
 	}
 }
