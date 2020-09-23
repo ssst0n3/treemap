@@ -19,4 +19,7 @@ type WithId struct {
 	Node
 }
 
-const TableNameNode = "node"
+const (
+	TableNameNode = "node"
+	ColumnNameNodeNodeType = "node_type"
+)

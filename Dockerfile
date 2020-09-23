@@ -17,8 +17,8 @@ ADD https://github.com/ufoscout/docker-compose-wait/releases/download/$WAIT_VERS
 RUN chmod +x /wait
 
 RUN mkdir -p /app
-COPY --from=0 /build/skilltree_backend /app/
+COPY --from=0 /build/treemap /app/
 #COPY --from=1 /build/dist /app/dist
 #COPY file_server /app/file_server
 WORKDIR /app
-CMD /wait && ./skilltree_backend
+CMD /wait && ./treemap

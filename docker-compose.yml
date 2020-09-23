@@ -5,7 +5,7 @@ services:
     image: treemap_app
     container_name: treemap_app
     ports:
-      - "11000:11000"
+      - "12000:12000"
     environment:
       WAIT_HOSTS: db:3306
       WAIT_HOSTS_TIMEOUT: 300
@@ -39,7 +39,7 @@ services:
     container_name: treemap_db_adminer
     restart: always
     ports:
-      - "11002:8080"
+      - "12002:8080"
 
 volumes:
   treemap_db:
