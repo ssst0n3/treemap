@@ -25,5 +25,15 @@ func ListRootNodes(c *gin.Context) {
 }
 
 func TreeNodes(c *gin.Context) {
-
+	id, err := NodeResource.MustResourceExistsByIdAutoParseParam(c)
+	if err != nil {
+		lightweight_api.HandleStatusBadRequestError(c, err)
+		return
+	}
+	if nodeRecursive, err := database.TreeNodes(uint(id)); err != nil {
+		lightweight_api.HandleInternalServerError(c, err)
+		return
+	} else {
+		c.JSON(http.StatusOK, nodeRecursive)
+	}
 }
