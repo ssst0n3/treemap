@@ -9,7 +9,7 @@ import (
 
 func ListRootNodes() ([]node.WithId, error) {
 	query := fmt.Sprintf("SELECT * FROM %s WHERE %s=%d", node.TableNameNode, node.ColumnNameNodeNodeType, nodeType.Root)
-	var nodeWithIdList []node.WithId
+	nodeWithIdList := []node.WithId
 	if err := Conn.OrmQueryRowsBind(&nodeWithIdList, query); err != nil {
 		awesome_error.CheckErr(err)
 		return nil, err
