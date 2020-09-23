@@ -1,0 +1,46 @@
+version: '3'
+services:
+  app:
+    build: .
+    image: treemap_app
+    container_name: treemap_app
+    ports:
+      - "11000:11000"
+    environment:
+      WAIT_HOSTS: db:3306
+      WAIT_HOSTS_TIMEOUT: 300
+      WAIT_SLEEP_INTERVAL: 10
+      WAIT_HOST_CONNECT_TIMEOUT: 10
+      DB_NAME: treemap
+      DB_HOST: db
+      DB_USER: treemap
+      DB_PASSWORD_FILE: /treemap_db_password
+    volumes:
+      - ./secrets/treemap_db_password:/treemap_db_password
+
+  db:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    container_name: treemap_db_db
+    restart: always
+    volumes:
+      - ./treemap_db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - treemap_db:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: toor
+      MYSQL_PASSWORD: example
+      MYSQL_USER: treemap
+      MYSQL_DATABASE: treemap
+
+  adminer:
+    depends_on:
+      - db
+    image: adminer
+    container_name: treemap_db_adminer
+    restart: always
+    ports:
+      - "11002:8080"
+
+volumes:
+  treemap_db:
+
