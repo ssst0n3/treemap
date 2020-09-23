@@ -44,6 +44,9 @@ func TreeNodes(id uint) (node.Recursive, error) {
 					nodeRecursive.Sub = append(nodeRecursive.Sub, subNode)
 				}
 			}
+			if len(nodeRecursive.Sub) == 0 {
+				nodeRecursive.Sub = []node.Recursive{}
+			}
 			return nodeRecursive, nil
 		}
 	}
