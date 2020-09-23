@@ -51,10 +51,6 @@ func CreateNode(c *gin.Context) {
 			lightweight_api.HandleStatusBadRequestError(c, err)
 			return
 		}
-		if err := c.BindJSON(&createBody); err != nil {
-			lightweight_api.HandleStatusBadRequestError(c, err)
-			return
-		}
 		if err := NodeResource.MustResourceExistsById(c, int64(createBody.Parent)); err != nil {
 			lightweight_api.HandleStatusBadRequestError(c, err)
 			return
