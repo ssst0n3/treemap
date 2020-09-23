@@ -19,6 +19,11 @@ type WithId struct {
 	Node
 }
 
+type NodeRecursive struct {
+	WithId
+	Sub []NodeRecursive
+}
+
 const (
 	TableNameNode = "node"
 	ColumnNameNodeNodeType = "node_type"

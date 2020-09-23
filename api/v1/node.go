@@ -23,3 +23,7 @@ func ListRootNodes(c *gin.Context) {
 		c.JSON(http.StatusOK, nodeWithIdList)
 	}
 }
+
+func TreeNodes(c *gin.Context) {
+
+}
