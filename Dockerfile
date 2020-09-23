@@ -1,5 +1,5 @@
 FROM golang:1.14
-COPY skilltree_backend /build
+COPY . /build
 WORKDIR /build
 RUN GO111MODULE="on" GOPROXY="https://goproxy.io" go build
 

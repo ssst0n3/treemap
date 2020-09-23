@@ -1,6 +1,6 @@
 package node
 
-import "skilltree_backend/model/node/nodeType"
+import "github.com/ssst0n3/treemap/model/node/nodeType"
 
 type Node struct {
 	Name     string        `json:"name"`
