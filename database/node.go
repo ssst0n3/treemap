@@ -42,7 +42,9 @@ func TreeNodes(id uint) (node.Recursive, error) {
 						awesome_error.CheckErr(err)
 						return node.Recursive{}, err
 					} else {
-						nodeRecursive.Sub = append(nodeRecursive.Sub, subNode)
+						if subNode.Id != 0 {
+							nodeRecursive.Sub = append(nodeRecursive.Sub, subNode)
+						}
 					}
 				}
 				if len(nodeRecursive.Sub) == 0 {
@@ -51,7 +53,7 @@ func TreeNodes(id uint) (node.Recursive, error) {
 				return nodeRecursive, nil
 			}
 		} else {
-			return node.Recursive{}, err
+			return node.Recursive{}, nil
 		}
 	}
 }
