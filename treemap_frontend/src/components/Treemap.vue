@@ -1,50 +1,49 @@
 <template>
   <div>
     <!--    <div id="jsmind_container" ref="jsmind_container"/>-->
+    <div class="container">
+      <div class="row">
+        <div class="col">
+          <b-form-select v-model="selected" :options="options" size="sm" class="mt-3"/>
+          <div class="mt-3">Select root node <strong>{{ selected }}</strong></div>
+        </div>
+      </div>
+    </div>
     <js-mind :values="mind" height="1000px"></js-mind>
-    <radial-menu
-        style="position: fixed; z-index: 3; margin-top: 1%; margin-left:85%; background-color: white"
-        :itemSize="60"
-        :radius="120"
-        :angle-restriction="180"
-        :rotate="180">
-      <radial-menu-item
-          v-for="(item, index) in items"
-          :key="index"
-          style="background-color: white"
-          @click="() => handleClick(item)">
-        <span>{{ item }}</span>
-      </radial-menu-item>
-    </radial-menu>
+
   </div>
 </template>
 
 <script>
-import jsMind from 'jsmind'
-// import 'jsmind/style/jsmind.css'
-
 import Vue from 'vue'
 import jm from 'vue-jsmind'
-import {RadialMenu, RadialMenuItem} from 'vue-radial-menu'
+import lightweightRestful from 'vue-lightweight_restful'
+import consts from "@/utils/consts";
 
 Vue.use(jm)
 
 export default {
   name: "Treemap",
-  components: {
-    RadialMenu,
-    RadialMenuItem
-  },
+  components: {},
   data: function () {
     return {
+      selected: 0,
+      options: [
+        {value: null, text: 'Please select an option'},
+      ],
       tree_example: {
+        "id": 1,
         "topic": "网络安全",
         "children": [
-          {"topic": "Web安全", "children": []},
-          {"topic": "Linux", "children": []},
+          {"id": 2, "topic": "Web安全", "children": []},
+          {"id": 3, "topic": "Linux", "children": []},
           {
-            "topic": "CTF", "children": [
-              {"topic": "<a href='xxx' style='color: white'> <i class='fas fa-book'> Web </i></a>", "children": []},
+            "id": 4, "topic": "CTF", "children": [
+              {
+                "id": 5,
+                "topic": "<a href='xxx' style='color: white'> <i class='fas fa-book'> Web </i></a>",
+                "children": []
+              },
             ]
           },
         ]
@@ -62,8 +61,9 @@ export default {
     editable: Boolean,
   },
   computed: {},
-  created() {
+  async created() {
     this.mind.data = this.load(this.tree == null ? this.tree_example : this.tree)
+    await this.generate_options()
   },
   mounted() {
     // this.set_container_size()
@@ -75,6 +75,15 @@ export default {
     // this.jm = jsMind.show(options, this.mind)
   },
   methods: {
+    async generate_options() {
+      let options = []
+      let nodes = await lightweightRestful.api.get(consts.api.v1.node)
+      nodes.forEach(node => {
+        console.log(node)
+        options.push({'value': node.id, 'text': node.name})
+      })
+      this.options = options
+    },
     set_container_size() {
       let container = this.$refs.jsmind_container;
       container.style.height = window.innerHeight - 50 + 'px'
@@ -82,7 +91,7 @@ export default {
     },
     load(node) {
       let format = {
-        'id': jsMind.util.uuid.newid(),
+        'id': node.id,
         'topic': node.topic,
         'children': []
       }
