@@ -13,6 +13,7 @@ services:
       WAIT_HOST_CONNECT_TIMEOUT: 5
       DB_NAME: treemap
       DB_HOST: db
+      DB_PORT: 3306
       DB_USER: treemap
       DB_PASSWORD_FILE: /treemap_db_password
     volumes:
@@ -31,6 +32,8 @@ services:
       MYSQL_PASSWORD: example
       MYSQL_USER: treemap
       MYSQL_DATABASE: treemap
+    ports:
+      - "12306:3306"
 
   adminer:
     depends_on:

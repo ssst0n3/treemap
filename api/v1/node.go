@@ -3,10 +3,16 @@ package v1
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
+	"fmt"
+	"github.com/davecgh/go-spew/spew"
 	"github.com/gin-gonic/gin"
 	"github.com/ssst0n3/lightweight_api"
+	"github.com/ssst0n3/treemap/consts"
 	"github.com/ssst0n3/treemap/database"
+	"github.com/ssst0n3/treemap/model"
 	"github.com/ssst0n3/treemap/model/node"
+	"github.com/ssst0n3/treemap/model/node/nodeType"
 	"io/ioutil"
 	"net/http"
 )
@@ -41,7 +47,18 @@ func TreeNodes(c *gin.Context) {
 	}
 }
 
-func CreateNode(c *gin.Context) {
+func CreateRoot(c *gin.Context) {
+	NodeResource.CreateResource(c, &node.Node{}, "", func(modelPtr interface{}) {
+		spew.Dump(modelPtr)
+		n := modelPtr.(*node.Node)
+		if n.NodeType != nodeType.Root {
+			lightweight_api.HandleStatusBadRequestError(c, errors.New(fmt.Sprintf(consts.ErrorNodeTypeMustBeTypeRoot, nodeType.Root)))
+			return
+		}
+	}, nil)
+}
+
+func CreateChild(c *gin.Context) {
 	if body, err := ioutil.ReadAll(c.Request.Body); err != nil {
 		lightweight_api.HandleInternalServerError(c, err)
 		return
@@ -55,29 +72,16 @@ func CreateNode(c *gin.Context) {
 			lightweight_api.HandleStatusBadRequestError(c, err)
 			return
 		}
+
 		c.Request.Body = ioutil.NopCloser(bytes.NewReader(body))
 		NodeResource.CreateResource(c, &node.Node{}, "", nil, func(id int64) {
-			var children string
-			if err := database.Conn.OrmShowObjectOnePropertyByIdUsingJsonBind(node.TableNameNode, node.ColumnNameNodeChildren, int64(createBody.Parent), &children); err != nil {
+			nodeRelation := model.NodeRelation{
+				Parent: createBody.Parent,
+				Child:  uint(id),
+			}
+			if _, err := database.Conn.CreateObject(model.TableNameNodeRelation, nodeRelation); err != nil {
 				lightweight_api.HandleInternalServerError(c, err)
 				return
-			} else {
-				var childrenIdList []uint
-				if err := json.Unmarshal([]byte(children), &childrenIdList); err != nil {
-					lightweight_api.HandleInternalServerError(c, err)
-					return
-				} else {
-					childrenIdList = append(childrenIdList, uint(id))
-					if newChildren, err := json.Marshal(childrenIdList); err != nil {
-						lightweight_api.HandleInternalServerError(c, err)
-						return
-					} else {
-						if err := database.Conn.UpdateObjectSingleColumnById(int64(createBody.Parent), node.TableNameNode, node.ColumnNameNodeChildren, newChildren); err != nil {
-							lightweight_api.HandleInternalServerError(c, err)
-							return
-						}
-					}
-				}
 			}
 		})
 	}

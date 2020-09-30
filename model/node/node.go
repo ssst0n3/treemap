@@ -1,6 +1,9 @@
 package node
 
-import "github.com/ssst0n3/treemap/model/node/nodeType"
+import (
+	"github.com/ssst0n3/awesome_libs/awesome_error"
+	"github.com/ssst0n3/treemap/model/node/nodeType"
+)
 
 type Node struct {
 	Name     string        `json:"name"`
@@ -8,7 +11,6 @@ type Node struct {
 
 	// common:
 	Description string `json:"description"`
-	Children    string `json:"children"` // [1,2,3]
 
 	// only for leaf:
 	Leaf
@@ -30,8 +32,19 @@ type CreateBody struct {
 }
 
 const (
-	TableNameNode = "node"
-	ColumnNameNodeName = "name"
+	TableNameNode          = "node"
+	ColumnNameNodeName     = "name"
 	ColumnNameNodeChildren = "children"
 	ColumnNameNodeNodeType = "node_type"
 )
+
+func (r *Recursive) Tree(getChildrenFunc func(id uint) ([]Recursive, error)) (err error) {
+	r.Sub, err = getChildrenFunc(r.Id)
+	for _, sub := range r.Sub {
+		if err := sub.Tree(getChildrenFunc); err != nil {
+			awesome_error.CheckErr(err)
+			return err
+		}
+	}
+	return nil
+}

@@ -7,8 +7,10 @@ import (
 func InitRouter(router *gin.Engine) {
 	nodeGroup := router.Group(NodeResource.BaseRelativePath)
 	{
-		nodeGroup.GET("/", ListRootNodes)
-		nodeGroup.GET("/:id", NodeResource.ShowResource)
-		nodeGroup.POST("", CreateNode)
+		nodeGroup.GET("/root", ListRootNodes)
+		nodeGroup.GET("/root/:id", TreeNodes)
+		nodeGroup.GET("/children/:id", NodeResource.ShowResource)
+		nodeGroup.POST("/root", CreateRoot)
+		nodeGroup.POST("/child", CreateChild)
 	}
 }

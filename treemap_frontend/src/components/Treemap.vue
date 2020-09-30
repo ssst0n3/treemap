@@ -1,32 +1,21 @@
 <template>
   <div>
-    <!--    <div id="jsmind_container" ref="jsmind_container"/>-->
-    <div class="container">
-      <div class="row">
-        <div class="col">
-          <b-form-select v-model="selected" :options="options" size="sm" class="mt-3"/>
-          <div class="mt-3">Select root node <strong>{{ selected }}</strong></div>
-        </div>
-      </div>
-    </div>
-    <js-mind :values="mind" height="1000px"></js-mind>
-
+    <js-mind :key="refresh" :values="mind" :height="height" ref="js_mind"></js-mind>
   </div>
 </template>
 
 <script>
-import Vue from 'vue'
-import jm from 'vue-jsmind'
-import lightweightRestful from 'vue-lightweight_restful'
-import consts from "@/utils/consts";
+// import lightweightRestful from 'vue-lightweight_restful'
+// import consts from "@/utils/consts";
 
-Vue.use(jm)
 
 export default {
   name: "Treemap",
   components: {},
   data: function () {
     return {
+      is_mounted: false,
+      refresh: 1,
       selected: 0,
       options: [
         {value: null, text: 'Please select an option'},
@@ -54,61 +43,93 @@ export default {
         "format": "node_tree",
         "data": {},
       },
+      old: {},
     }
   },
   props: {
     tree: Object,
     editable: Boolean,
+    height: String
   },
-  computed: {},
+  computed: {
+    jm_value() {
+      if (!this.is_mounted)
+        return;
+      return this.get_jm_data()
+    }
+  },
   async created() {
-    this.mind.data = this.load(this.tree == null ? this.tree_example : this.tree)
-    await this.generate_options()
+    this.$set(this.mind, 'data', this.load(this.tree))
+    // this.mind.data = this.load(this.tree == null ? this.tree_example : this.tree)
+  },
+  watch: {
+    tree: function () {
+      // this.mind.data = this.load(this.tree == null ? this.tree_example : this.tree)
+      this.$set(this.mind, 'data', this.load(this.tree))
+      this.refresh += 1
+      console.log('jm_value tree:', this.jm_value)
+      console.log(this.get_jm_data())
+    },
+    jm_value: {
+      handler() {
+        console.log('jm_value watch:', this.jm_value)
+      }, deep: true, immediate: true
+    }
   },
   mounted() {
-    // this.set_container_size()
-    // let options = {
-    //   container: 'jsmind_container',
-    //   editable: this.editable,
-    //   theme: 'asphalt'
-    // }
-    // this.jm = jsMind.show(options, this.mind)
+    this.is_mounted = true
+    // this.$watch('$refs.js_mind.jm.mind.nodes', (newValue) => {
+    //   console.log("jm.get_data", this.$refs.js_mind.jm.get_data())
+    //   console.log('new:', this.record(newValue))
+    //   console.log('old:', this.old)
+    //   if (Object.keys(this.old).length > 0) {
+    //     this.diff(this.record(newValue), this.old)
+    //   }
+    //   this.old = this.record(newValue)
+    // }, {deep: true, immediate: true})
   },
   methods: {
-    async generate_options() {
-      let options = []
-      let nodes = await lightweightRestful.api.get(consts.api.v1.node)
-      nodes.forEach(node => {
-        console.log(node)
-        options.push({'value': node.id, 'text': node.name})
-      })
-      this.options = options
+    get_jm_data() {
+      return this.$refs.js_mind.jm.get_data()
     },
-    set_container_size() {
-      let container = this.$refs.jsmind_container;
-      container.style.height = window.innerHeight - 50 + 'px'
-      container.style.width = window.innerWidth - 8 + 'px'
+    diff(n, o) {
+      Object.keys(n).forEach(key => {
+        if (o.key !== undefined) {
+          console.log(key, 'exist', o[key])
+        } else {
+          let newNode = {
+            'name': n[key].topic,
+            'parent': n[key].id
+          }
+          console.log("add", newNode)
+          // lightweightRestful.api.post(consts.api.v1.node, null, newNode)
+        }
+      })
+    },
+    record(nodes) {
+      let r = {}
+      Object.keys(nodes).forEach(key => {
+            if (nodes[key].topic !== undefined) {
+              r[key] = nodes[key].topic
+            }
+          }
+      )
+      return r
     },
     load(node) {
       let format = {
         'id': node.id,
-        'topic': node.topic,
+        'topic': node.name,
         'children': []
       }
-      node.children.forEach(
-          child => {
-            format.children.push(this.load(child))
-          }
-      )
-      return format
-    },
-    async handleClick(item) {
-      console.log(item)
-      if (item === 'expand_all') {
-        this.jm.expand_all()
-      } else if (item === 'collapse_all') {
-        this.jm.collapse_all()
+      if (node.children !== undefined) {
+        node.children.forEach(
+            child => {
+              format.children.push(this.load(child))
+            }
+        )
       }
+      return format
     }
   }
 }

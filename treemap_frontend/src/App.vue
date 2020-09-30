@@ -1,17 +1,14 @@
 <template>
   <div id="app">
-    <Treemap :editable="true"></Treemap>
+    <!--    <Example/>-->
+    <RouterView/>
   </div>
 </template>
 
 <script>
-import Treemap from "@/components/Treemap";
 
 export default {
   name: 'App',
-  components: {
-    Treemap,
-  }
 }
 </script>
 
