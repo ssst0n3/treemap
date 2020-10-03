@@ -5,9 +5,6 @@
 </template>
 
 <script>
-// import lightweightRestful from 'vue-lightweight_restful'
-// import consts from "@/utils/consts";
-
 
 export default {
   name: "Treemap",

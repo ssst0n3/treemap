@@ -1,10 +1,11 @@
 {
-  "name": "treemap",
+  "name": "@ssst0n3/vue-treemap",
   "version": "0.0.1",
+  "main": "dist/vue-treemap.umd.js",
   "private": false,
   "scripts": {
     "serve": "PORT=12100 vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "build": "vue-cli-service build --target lib --name vue-treemap src/main.js",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
