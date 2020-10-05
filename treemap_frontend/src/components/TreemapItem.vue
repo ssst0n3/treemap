@@ -92,7 +92,7 @@ export default {
               delete this.add_queue[id]
             } else {
               let new_node = {
-                topic: name
+                name: name
               }
               await api.update_node(id, new_node)
             }
@@ -124,6 +124,7 @@ export default {
       let format = {
         'id': node.id,
         'topic': node.name,
+        'node_type': node.node_type,
         'children': []
       }
       if (node.Sub) {

@@ -86,3 +86,20 @@ func CreateChild(c *gin.Context) {
 		})
 	}
 }
+
+func UpdateNode(c *gin.Context) {
+	id, err := NodeResource.MustResourceExistsByIdAutoParseParam(c)
+	if err != nil {
+		lightweight_api.HandleStatusBadRequestError(c, err)
+		return
+	}
+	var n node.Node
+	if err := c.BindJSON(&n); err != nil {
+		lightweight_api.HandleStatusBadRequestError(c, err)
+		return
+	}
+	if err := database.Conn.UpdateObjectSingleColumnById(id, node.TableNameNode, node.ColumnNameNodeName, n.Name); err != nil {
+		lightweight_api.HandleInternalServerError(c, err)
+		return
+	}
+}
