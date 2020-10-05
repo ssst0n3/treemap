@@ -11,15 +11,20 @@ import (
 
 func InitRouter() *gin.Engine {
 	router := gin.Default()
-	corsConfig := cors.DefaultConfig()
-	corsConfig.AllowCredentials = true
-	corsConfig.AllowOrigins = append(corsConfig.AllowOrigins, "http://127.0.0.1:12100")
-	log.Logger.Info(corsConfig.AllowOrigins)
-	router.Use(cors.New(corsConfig))
 	{
+		// cors
+		corsConfig := cors.DefaultConfig()
+		corsConfig.AllowCredentials = true
+		corsConfig.AllowOrigins = append(corsConfig.AllowOrigins, "http://127.0.0.1:12100")
+		log.Logger.Info(corsConfig.AllowOrigins)
+		router.Use(cors.New(corsConfig))
+	}
+	{
+		// frontend
 		router.Use(static.Serve("/", static.LocalFile("./dist", false)))
 	}
 	{
+		// ping
 		router.GET("/ping", func(context *gin.Context) {
 			context.JSON(http.StatusOK, gin.H{"message": "pong"})
 		})

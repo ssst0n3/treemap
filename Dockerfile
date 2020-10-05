@@ -9,7 +9,7 @@ WORKDIR /build
 RUN npm config set registry https://mirrors.huaweicloud.com/repository/npm/ && \
 npm cache clean -f && \
 npm install
-RUN npm run-script build
+RUN npx vue-cli-service build
 
 FROM ubuntu
 ENV WAIT_VERSION 2.7.3

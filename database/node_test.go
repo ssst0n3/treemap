@@ -14,13 +14,14 @@ func TestListRootNodes(t *testing.T) {
 
 func TestNodeChildren(t *testing.T) {
 	lightweight_db.Logger.Level = logrus.DebugLevel
-	nodes, err := NodeChildren(2)
+	nodes, err := NodeChildren(1)
 	assert.NoError(t, err)
 	spew.Dump(nodes)
 }
 
 func TestTreeNodes(t *testing.T) {
-	node, err := TreeNodes(2)
+	lightweight_db.Logger.Level = logrus.DebugLevel
+	node, err := TreeNodes(1)
 	assert.NoError(t, err)
 	spew.Dump(node)
 }

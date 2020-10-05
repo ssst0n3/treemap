@@ -40,11 +40,12 @@ const (
 
 func (r *Recursive) Tree(getChildrenFunc func(id uint) ([]Recursive, error)) (err error) {
 	r.Sub, err = getChildrenFunc(r.Id)
-	for _, sub := range r.Sub {
+	for index, sub := range r.Sub {
 		if err := sub.Tree(getChildrenFunc); err != nil {
 			awesome_error.CheckErr(err)
 			return err
 		}
+		r.Sub[index] = sub
 	}
 	return nil
 }
