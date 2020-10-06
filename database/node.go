@@ -67,3 +67,18 @@ func TreeNodes(id uint) (node.Recursive, error) {
 		return nodeRecursive, err
 	}
 }
+
+func MaxIndexOfChildren(id uint) (uint, error) {
+	query := awesome_libs.Format(
+		"SELECT COALESCE(MAX(`{.index}`),0) FROM {.node} JOIN {.node_relation} ON {.node}.id={.child} AND {.parent}=?",
+		awesome_libs.Dict{
+			"index":         node.ColumnNameNodeIndex,
+			"node":          node.TableNameNode,
+			"node_relation": model.TableNameNodeRelation,
+			"child":         model.ColumnNameNodeRelationChild,
+			"parent":        model.ColumnNameNodeRelationParent,
+		},
+	)
+	var maxIndex uint
+	return maxIndex, Conn.QueryRow(query, &maxIndex, id)
+}

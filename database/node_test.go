@@ -3,6 +3,7 @@ package database
 import (
 	"github.com/davecgh/go-spew/spew"
 	"github.com/sirupsen/logrus"
+	"github.com/ssst0n3/awesome_libs/log"
 	"github.com/ssst0n3/lightweight_db"
 	"github.com/stretchr/testify/assert"
 	"testing"
@@ -24,4 +25,11 @@ func TestTreeNodes(t *testing.T) {
 	node, err := TreeNodes(1)
 	assert.NoError(t, err)
 	spew.Dump(node)
+}
+
+func TestMaxIndexOfChildren(t *testing.T) {
+	lightweight_db.Logger.Level = logrus.DebugLevel
+	max, err := MaxIndexOfChildren(0)
+	assert.NoError(t, err)
+	log.Logger.Info(max)
 }

@@ -74,7 +74,15 @@ func CreateChild(c *gin.Context) {
 		}
 
 		c.Request.Body = ioutil.NopCloser(bytes.NewReader(body))
-		NodeResource.CreateResource(c, &node.Node{}, "", nil, func(id int64) {
+		NodeResource.CreateResource(c, &node.Node{}, "", func(modelPtr interface{}) {
+			n := modelPtr.(*node.Node)
+			maxIndex, err := database.MaxIndexOfChildren(createBody.Parent)
+			if err != nil {
+				lightweight_api.HandleInternalServerError(c, err)
+				return
+			}
+			n.Index = maxIndex + 1
+		}, func(id int64) {
 			nodeRelation := model.NodeRelation{
 				Parent: createBody.Parent,
 				Child:  uint(id),

@@ -6,6 +6,7 @@ import (
 )
 
 type Node struct {
+	Index    uint          `json:"index"`
 	Name     string        `json:"name"`
 	NodeType nodeType.Enum `json:"node_type"`
 
@@ -34,8 +35,8 @@ type CreateBody struct {
 const (
 	TableNameNode          = "node"
 	ColumnNameNodeName     = "name"
-	ColumnNameNodeChildren = "children"
 	ColumnNameNodeNodeType = "node_type"
+	ColumnNameNodeIndex    = "index"
 )
 
 func (r *Recursive) Tree(getChildrenFunc func(id uint) ([]Recursive, error)) (err error) {
