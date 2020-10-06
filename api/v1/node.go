@@ -96,17 +96,45 @@ func CreateChild(c *gin.Context) {
 }
 
 func UpdateNode(c *gin.Context) {
-	id, err := NodeResource.MustResourceExistsByIdAutoParseParam(c)
+	idInt64, err := NodeResource.MustResourceExistsByIdAutoParseParam(c)
 	if err != nil {
 		lightweight_api.HandleStatusBadRequestError(c, err)
 		return
 	}
+	id := uint(idInt64)
+	action := c.Param("action")
+	switch action {
+	case consts.ActionUpdateName:
+		UpdateName(id, c)
+	case consts.ActionMoveNode:
+		MoveNode(id, c)
+	}
+}
+
+func UpdateName(id uint, c *gin.Context) {
 	var n node.Node
 	if err := c.BindJSON(&n); err != nil {
 		lightweight_api.HandleStatusBadRequestError(c, err)
 		return
 	}
-	if err := database.Conn.UpdateObjectSingleColumnById(id, node.TableNameNode, node.ColumnNameNodeName, n.Name); err != nil {
+	if err := database.Conn.UpdateObjectSingleColumnById(int64(id), node.TableNameNode, node.ColumnNameNodeName, n.Name); err != nil {
+		lightweight_api.HandleInternalServerError(c, err)
+		return
+	}
+}
+
+func MoveNode(id uint, c *gin.Context) {
+	var moveNodeBody node.MoveNodeBody
+	if err := c.BindJSON(&moveNodeBody); err != nil {
+		lightweight_api.HandleStatusBadRequestError(c, err)
+		return
+	}
+	nodeRelation := model.NodeRelation{
+		Parent: moveNodeBody.Parent,
+		Child:  id,
+	}
+	NodeRelationResource.UpdateResource(c, &nodeRelation, "", nil)
+	if err := database.Conn.UpdateObjectSingleColumnById(int64(id), node.TableNameNode, node.ColumnNameNodeIndex, moveNodeBody.Index); err != nil {
 		lightweight_api.HandleInternalServerError(c, err)
 		return
 	}

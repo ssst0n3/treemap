@@ -32,6 +32,11 @@ type CreateBody struct {
 	Parent uint `json:"parent"`
 }
 
+type MoveNodeBody struct {
+	Parent uint `json:"parent"`
+	Index  uint `json:"index"`
+}
+
 const (
 	TableNameNode          = "node"
 	ColumnNameNodeName     = "name"

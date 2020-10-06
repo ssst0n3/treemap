@@ -17,5 +17,13 @@ export default {
     async remove_node(id) {
         console.log("remove_node")
         await lightweightRestful.api.delete(consts.api.v1.node.child_item(id), null)
+    },
+    async move_node(id, before_id, parent_id) {
+        console.log("move_node")
+        let data = {
+            before_id: before_id,
+            parent_id: parent_id,
+        }
+        await lightweightRestful.api.post(consts.api.v1.node.child_item(id), null, data)
     }
 }

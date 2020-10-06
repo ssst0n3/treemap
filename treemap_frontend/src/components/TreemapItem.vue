@@ -103,6 +103,13 @@ export default {
             await api.remove_node(id)
             break
           }
+          case "move_node": {
+            let node_id = data.data[0]
+            let before_id = data.data[1]
+            let parent_id = data.data[2]
+            await api.move_node(node_id, before_id, parent_id)
+            break
+          }
         }
         console.log(data)
       }
@@ -125,7 +132,8 @@ export default {
         'id': node.id,
         'topic': node.name,
         'node_type': node.node_type,
-        'children': []
+        'children': [],
+        'index': node.index
       }
       if (node.Sub) {
         node.Sub.forEach(
