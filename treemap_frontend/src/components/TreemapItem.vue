@@ -56,11 +56,12 @@ export default {
     },
     click_handle(e) {
       let element = e.target
-      let node_id = this.$refs.js_mind.jm.view.get_binded_nodeid(element);
-      // if (node_id) {
-      console.log(node_id)
-      this.$emit('js_mind_click_node', node_id)
-      // }
+      let is_expander = this.$refs.js_mind.jm.view.is_expander(element)
+      if (!is_expander) {
+        let node_id = this.$refs.js_mind.jm.view.get_binded_nodeid(element);
+        console.log(node_id)
+        this.$emit('js_mind_click_node', node_id)
+      }
     },
     async jm_listener(type, data) {
       if (type === consts.jm.type.edit) {
