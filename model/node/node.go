@@ -13,6 +13,7 @@ type Node struct {
 	// common:
 	Description string `json:"description"`
 
+	ContentId uint `json:"content_id"`
 	// only for leaf:
 	Leaf
 }

@@ -14,18 +14,19 @@ CREATE TABLE `node` (
   `name` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `node_type` tinyint unsigned NOT NULL,
   `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `content_id` int unsigned NOT NULL,
   `leaf_type` tinyint unsigned NOT NULL,
   `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-INSERT INTO `node` (`id`, `index`, `name`, `node_type`, `description`, `leaf_type`, `content`) VALUES
-(1,	0,	'WEB安全',	0,	'',	0,	''),
-(2,	0,	'test2',	0,	'',	0,	''),
-(6,	0,	'xxxxxxx',	0,	'',	0,	''),
-(7,	0,	'',	0,	'',	0,	''),
-(8,	0,	'',	0,	'',	0,	''),
-(9,	0,	'test1',	1,	'',	0,	'');
+INSERT INTO `node` (`id`, `index`, `name`, `node_type`, `description`, `content_id`, `leaf_type`, `content`) VALUES
+(1,	0,	'WEB安全',	0,	'',	0, 0,	''),
+(2,	0,	'test2',	0,	'',	0, 0,	''),
+(6,	0,	'xxxxxxx',	0,	'',	0, 0,	''),
+(7,	0,	'',	0,	'',	0, 0,	''),
+(8,	0,	'',	0,	'',	0, 0,	''),
+(9,	0,	'test1',	1,	'',	0, 0,	'');
 
 DROP TABLE IF EXISTS `node_relation`;
 CREATE TABLE `node_relation` (
