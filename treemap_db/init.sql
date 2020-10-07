@@ -10,7 +10,7 @@ SET NAMES utf8mb4;
 DROP TABLE IF EXISTS `node`;
 CREATE TABLE `node` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `index` int unsigned NOT NULL,
+  `index` int NOT NULL,
   `name` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `node_type` tinyint unsigned NOT NULL,
   `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,

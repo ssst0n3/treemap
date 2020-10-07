@@ -12,7 +12,10 @@ export default {
     },
     async update_node(id, data) {
         console.log("update_node")
-        await lightweightRestful.api.put(consts.api.v1.node.node_item(id), null, data)
+        let params = {
+            action: "update_name"
+        }
+        await lightweightRestful.api.put(consts.api.v1.node.node_item(id), params, data)
     },
     async remove_node(id) {
         console.log("remove_node")
@@ -20,10 +23,28 @@ export default {
     },
     async move_node(id, before_id, parent_id) {
         console.log("move_node")
+
+        let action = "move_node"
+        switch (before_id) {
+            case "_first_": {
+                action = "move_first"
+                before_id = 0
+                break
+            }
+            case "_last_": {
+                action = "move_last"
+                before_id = 0
+                break
+            }
+        }
+
+        let params = {
+            action: action
+        }
         let data = {
             before_id: before_id,
-            parent_id: parent_id,
+            parent: parent_id,
         }
-        await lightweightRestful.api.post(consts.api.v1.node.child_item(id), null, data)
+        await lightweightRestful.api.put(consts.api.v1.node.node_item(id), params, data)
     }
 }

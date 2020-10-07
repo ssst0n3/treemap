@@ -8,11 +8,9 @@ require (
 	github.com/gin-contrib/static v0.0.0-20200916080430-d45d9a37d28e
 	github.com/gin-gonic/gin v1.6.3
 	github.com/go-sql-driver/mysql v1.5.0
-	github.com/mattn/go-isatty v0.0.12 // indirect
 	github.com/sirupsen/logrus v1.6.0
-	github.com/ssst0n3/awesome_libs v0.4.0
+	github.com/ssst0n3/awesome_libs v0.4.1
 	github.com/ssst0n3/lightweight_api v0.4.6
-	github.com/ssst0n3/lightweight_db v0.4.6
+	github.com/ssst0n3/lightweight_db v0.5.0
 	github.com/stretchr/testify v1.5.1
-	gopkg.in/yaml.v2 v2.2.8 // indirect
 )

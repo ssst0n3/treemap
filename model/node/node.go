@@ -6,7 +6,7 @@ import (
 )
 
 type Node struct {
-	Index    uint          `json:"index"`
+	Index    int           `json:"index"`
 	Name     string        `json:"name"`
 	NodeType nodeType.Enum `json:"node_type"`
 
@@ -33,8 +33,8 @@ type CreateBody struct {
 }
 
 type MoveNodeBody struct {
-	Parent uint `json:"parent"`
-	Index  uint `json:"index"`
+	Parent   uint `json:"parent"`
+	BeforeId uint `json:"before_id"`
 }
 
 const (

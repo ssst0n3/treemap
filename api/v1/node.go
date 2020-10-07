@@ -102,12 +102,18 @@ func UpdateNode(c *gin.Context) {
 		return
 	}
 	id := uint(idInt64)
-	action := c.Param("action")
+	action := c.Query("action")
 	switch action {
 	case consts.ActionUpdateName:
 		UpdateName(id, c)
 	case consts.ActionMoveNode:
-		MoveNode(id, c)
+		MoveNode(id, action, c)
+	case consts.ActionMoveNodeFirst:
+		MoveNode(id, action, c)
+	case consts.ActionMoveNodeLast:
+		MoveNode(id, action, c)
+	default:
+		lightweight_api.HandleStatusBadRequestError(c, errors.New(fmt.Sprintf("action: %s not valid", action)))
 	}
 }
 
@@ -123,7 +129,7 @@ func UpdateName(id uint, c *gin.Context) {
 	}
 }
 
-func MoveNode(id uint, c *gin.Context) {
+func MoveNode(id uint, action string, c *gin.Context) {
 	var moveNodeBody node.MoveNodeBody
 	if err := c.BindJSON(&moveNodeBody); err != nil {
 		lightweight_api.HandleStatusBadRequestError(c, err)
@@ -133,8 +139,27 @@ func MoveNode(id uint, c *gin.Context) {
 		Parent: moveNodeBody.Parent,
 		Child:  id,
 	}
-	NodeRelationResource.UpdateResource(c, &nodeRelation, "", nil)
-	if err := database.Conn.UpdateObjectSingleColumnById(int64(id), node.TableNameNode, node.ColumnNameNodeIndex, moveNodeBody.Index); err != nil {
+
+	if nodeRelationId, err := database.Conn.QueryIdByGuid(NodeRelationResource.TableName, model.ColumnNameNodeRelationChild, id); err != nil {
+		lightweight_api.HandleInternalServerError(c, err)
+		return
+	} else {
+		if err := database.Conn.UpdateObject(nodeRelationId, NodeRelationResource.TableName, &nodeRelation); err != nil {
+			lightweight_api.HandleInternalServerError(c, err)
+			return
+		}
+	}
+
+	var err error
+	switch action {
+	case consts.ActionMoveNode:
+		err = database.MoveNode(moveNodeBody.BeforeId, id)
+	case consts.ActionMoveNodeFirst:
+		err = database.MoveFirst(moveNodeBody.Parent, id)
+	case consts.ActionMoveNodeLast:
+		err = database.MoveLast(moveNodeBody.Parent, id)
+	}
+	if err != nil {
 		lightweight_api.HandleInternalServerError(c, err)
 		return
 	}

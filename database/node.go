@@ -31,12 +31,13 @@ func NodeChildren(id uint) ([]node.Recursive, error) {
 	var nodeRecursive []node.Recursive
 
 	query := awesome_libs.Format(
-		"SELECT {.node}.* from {.node} JOIN {.node_relation} ON {.parent}=? and {.child}={.node}.id",
+		"SELECT {.node}.* FROM {.node} JOIN {.node_relation} ON `{.parent}`=? AND `{.child}`={.node}.id ORDER BY `{.index}`",
 		awesome_libs.Dict{
 			"node":          node.TableNameNode,
 			"node_relation": model.TableNameNodeRelation,
 			"parent":        model.ColumnNameNodeRelationParent,
 			"child":         model.ColumnNameNodeRelationChild,
+			"index":         node.ColumnNameNodeIndex,
 		},
 	)
 
@@ -68,10 +69,11 @@ func TreeNodes(id uint) (node.Recursive, error) {
 	}
 }
 
-func MaxIndexOfChildren(id uint) (uint, error) {
+func ExtremumIndexOfChildren(id uint, function string) (int, error) {
 	query := awesome_libs.Format(
-		"SELECT COALESCE(MAX(`{.index}`),0) FROM {.node} JOIN {.node_relation} ON {.node}.id={.child} AND {.parent}=?",
+		"SELECT COALESCE({.func}(`{.index}`),0) FROM {.node} JOIN {.node_relation} ON {.node}.id={.child} AND {.parent}=?",
 		awesome_libs.Dict{
+			"func":          function,
 			"index":         node.ColumnNameNodeIndex,
 			"node":          node.TableNameNode,
 			"node_relation": model.TableNameNodeRelation,
@@ -79,6 +81,65 @@ func MaxIndexOfChildren(id uint) (uint, error) {
 			"parent":        model.ColumnNameNodeRelationParent,
 		},
 	)
-	var maxIndex uint
+	var maxIndex int
 	return maxIndex, Conn.QueryRow(query, &maxIndex, id)
+}
+
+func MaxIndexOfChildren(id uint) (int, error) {
+	return ExtremumIndexOfChildren(id, "MAX")
+}
+
+func MinIndexOfChildren(id uint) (int, error) {
+	return ExtremumIndexOfChildren(id, "MIN")
+}
+
+func MoveNode(beforeId uint, nodeId uint) error {
+	var beforeIndex int
+	if err := Conn.OrmShowObjectOnePropertyBydIdByReflectBind(node.TableNameNode, node.ColumnNameNodeIndex, int64(beforeId), &beforeIndex); err != nil {
+		awesome_error.CheckErr(err)
+		return err
+	}
+	var nodeIndex uint
+	if err := Conn.OrmShowObjectOnePropertyBydIdByReflectBind(node.TableNameNode, node.ColumnNameNodeIndex, int64(nodeId), &nodeIndex); err != nil {
+		awesome_error.CheckErr(err)
+		return err
+	}
+	if err := Conn.UpdateObjectSingleColumnById(int64(nodeId), node.TableNameNode, node.ColumnNameNodeIndex, beforeIndex); err != nil {
+		awesome_error.CheckErr(err)
+		return err
+	}
+	if err := Conn.UpdateObjectSingleColumnById(int64(beforeId), node.TableNameNode, node.ColumnNameNodeIndex, nodeIndex); err != nil {
+		awesome_error.CheckErr(err)
+		return err
+	}
+	return nil
+}
+
+func MoveExtremum(parent, nodeId uint, extremum string) (err error) {
+	var extremumIndex int
+	switch extremum {
+	case "max":
+		extremumIndex, err = MaxIndexOfChildren(parent)
+		extremumIndex += 1
+	case "min":
+		extremumIndex, err = MinIndexOfChildren(parent)
+		extremumIndex -= 1
+	}
+	if err != nil {
+		awesome_error.CheckErr(err)
+		return err
+	}
+	if err := Conn.UpdateObjectSingleColumnById(int64(nodeId), node.TableNameNode, node.ColumnNameNodeIndex, extremumIndex); err != nil {
+		awesome_error.CheckErr(err)
+		return err
+	}
+	return nil
+}
+
+func MoveFirst(parent, nodeId uint) error {
+	return MoveExtremum(parent, nodeId, "min")
+}
+
+func MoveLast(parent uint, nodeId uint) error {
+	return MoveExtremum(parent, nodeId, "max")
 }

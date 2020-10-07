@@ -5,6 +5,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"github.com/ssst0n3/awesome_libs/log"
 	"github.com/ssst0n3/lightweight_db"
+	"github.com/ssst0n3/treemap/model/node"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
@@ -22,9 +23,9 @@ func TestNodeChildren(t *testing.T) {
 
 func TestTreeNodes(t *testing.T) {
 	lightweight_db.Logger.Level = logrus.DebugLevel
-	node, err := TreeNodes(1)
+	n, err := TreeNodes(1)
 	assert.NoError(t, err)
-	spew.Dump(node)
+	spew.Dump(n)
 }
 
 func TestMaxIndexOfChildren(t *testing.T) {
@@ -32,4 +33,18 @@ func TestMaxIndexOfChildren(t *testing.T) {
 	max, err := MaxIndexOfChildren(0)
 	assert.NoError(t, err)
 	log.Logger.Info(max)
+}
+
+func TestMoveNode(t *testing.T) {
+	beforeId := 10
+	nodeId := 11
+	var beforeIndex uint
+	var nodeIndex uint
+	assert.NoError(t, Conn.OrmShowObjectOnePropertyBydIdByReflectBind(node.TableNameNode, node.ColumnNameNodeIndex, int64(beforeId), &beforeIndex))
+	assert.NoError(t, Conn.OrmShowObjectOnePropertyBydIdByReflectBind(node.TableNameNode, node.ColumnNameNodeIndex, int64(nodeId), &nodeIndex))
+	log.Logger.Info(beforeIndex, nodeIndex)
+	assert.NoError(t, MoveNode(uint(beforeId), uint(nodeId)))
+	assert.NoError(t, Conn.OrmShowObjectOnePropertyBydIdByReflectBind(node.TableNameNode, node.ColumnNameNodeIndex, int64(beforeId), &beforeIndex))
+	assert.NoError(t, Conn.OrmShowObjectOnePropertyBydIdByReflectBind(node.TableNameNode, node.ColumnNameNodeIndex, int64(nodeId), &nodeIndex))
+	log.Logger.Info(beforeIndex, nodeIndex)
 }

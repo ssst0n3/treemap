@@ -1,6 +1,6 @@
 {
   "name": "vue-restful_treemap",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "main": "dist/treemap.umd.js",
   "private": false,
   "scripts": {
