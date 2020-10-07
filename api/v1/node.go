@@ -112,6 +112,8 @@ func UpdateNode(c *gin.Context) {
 		MoveNode(id, action, c)
 	case node.ActionMoveNodeLast:
 		MoveNode(id, action, c)
+	case node.ActionUpdateNodeContent:
+		UpdateContent(id, c)
 	default:
 		lightweight_api.HandleStatusBadRequestError(c, errors.New(fmt.Sprintf("action: %s not valid", action)))
 	}
@@ -124,6 +126,18 @@ func UpdateName(id uint, c *gin.Context) {
 		return
 	}
 	if err := database.Conn.UpdateObjectSingleColumnById(int64(id), node.TableNameNode, node.ColumnNameNodeName, n.Name); err != nil {
+		lightweight_api.HandleInternalServerError(c, err)
+		return
+	}
+}
+
+func UpdateContent(id uint, c *gin.Context) {
+	var n node.Node
+	if err := c.BindJSON(&n); err != nil {
+		lightweight_api.HandleStatusBadRequestError(c, err)
+		return
+	}
+	if err := database.Conn.UpdateObjectSingleColumnById(int64(id), node.TableNameNode, node.ColumnNameNodeContentId, n.ContentId); err != nil {
 		lightweight_api.HandleInternalServerError(c, err)
 		return
 	}

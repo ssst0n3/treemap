@@ -39,16 +39,18 @@ type MoveNodeBody struct {
 }
 
 const (
-	TableNameNode          = "node"
-	ColumnNameNodeName     = "name"
-	ColumnNameNodeNodeType = "node_type"
-	ColumnNameNodeIndex    = "index"
+	TableNameNode           = "node"
+	ColumnNameNodeName      = "name"
+	ColumnNameNodeContentId = "content_id"
+	ColumnNameNodeNodeType  = "node_type"
+	ColumnNameNodeIndex     = "index"
 )
 const (
-	ActionUpdateNodeName = "update_name"
-	ActionMoveNode       = "move_node"
-	ActionMoveNodeFirst  = "move_first"
-	ActionMoveNodeLast   = "move_last"
+	ActionUpdateNodeName    = "update_name"
+	ActionUpdateNodeContent = "update_content"
+	ActionMoveNode          = "move_node"
+	ActionMoveNodeFirst     = "move_first"
+	ActionMoveNodeLast      = "move_last"
 )
 
 func (r *Recursive) Tree(getChildrenFunc func(id uint) ([]Recursive, error)) (err error) {
