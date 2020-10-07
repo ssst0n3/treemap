@@ -44,6 +44,12 @@ const (
 	ColumnNameNodeNodeType = "node_type"
 	ColumnNameNodeIndex    = "index"
 )
+const (
+	ActionUpdateNodeName = "update_name"
+	ActionMoveNode       = "move_node"
+	ActionMoveNodeFirst  = "move_first"
+	ActionMoveNodeLast   = "move_last"
+)
 
 func (r *Recursive) Tree(getChildrenFunc func(id uint) ([]Recursive, error)) (err error) {
 	r.Sub, err = getChildrenFunc(r.Id)

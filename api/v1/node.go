@@ -104,13 +104,13 @@ func UpdateNode(c *gin.Context) {
 	id := uint(idInt64)
 	action := c.Query("action")
 	switch action {
-	case consts.ActionUpdateName:
+	case node.ActionUpdateNodeName:
 		UpdateName(id, c)
-	case consts.ActionMoveNode:
+	case node.ActionMoveNode:
 		MoveNode(id, action, c)
-	case consts.ActionMoveNodeFirst:
+	case node.ActionMoveNodeFirst:
 		MoveNode(id, action, c)
-	case consts.ActionMoveNodeLast:
+	case node.ActionMoveNodeLast:
 		MoveNode(id, action, c)
 	default:
 		lightweight_api.HandleStatusBadRequestError(c, errors.New(fmt.Sprintf("action: %s not valid", action)))
@@ -152,11 +152,11 @@ func MoveNode(id uint, action string, c *gin.Context) {
 
 	var err error
 	switch action {
-	case consts.ActionMoveNode:
+	case node.ActionMoveNode:
 		err = database.MoveNode(moveNodeBody.BeforeId, id)
-	case consts.ActionMoveNodeFirst:
+	case node.ActionMoveNodeFirst:
 		err = database.MoveFirst(moveNodeBody.Parent, id)
-	case consts.ActionMoveNodeLast:
+	case node.ActionMoveNodeLast:
 		err = database.MoveLast(moveNodeBody.Parent, id)
 	}
 	if err != nil {
