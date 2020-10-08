@@ -35,11 +35,8 @@ export default {
                 action_update_node_content: 'update_content',
                 action_move_node: 'move_node',
                 action_move_node_first: 'move_first',
-                action_move_node_last: 'move_last'
-            },
-            content_type: {
-                default: 0,
-                article: 1,
+                action_move_node_last: 'move_last',
+                action_reset_node_content: 'reset_content'
             }
         }
     }

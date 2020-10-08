@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <!--    <Example/>-->
-    <TreemapItem :height="500" :root_node_id="1" v-on:js_mind_click_node="js_mind_click_node"/>
+    <TreemapItem :height="500" :root_node_id="1" v-on:js_mind_click_node="js_mind_click_node" :decorate="decorate"/>
   </div>
 </template>
 
@@ -15,6 +15,10 @@ export default {
   methods: {
     js_mind_click_node(node_id) {
       console.log("clicked:", node_id)
+    },
+    decorate(name, content_type, content_id){
+      console.log(name, content_type, content_id)
+      return name
     }
   }
 }

@@ -10,23 +10,25 @@ export default {
             node_type: consts.model.node.node_type.node,
         })
     },
-    async update_name(id, data) {
-        console.log("update_node")
+    async update_node(id, action, data) {
+        console.log("update_node:", action)
         let params = {
             action: consts.model.node.action.action_update_node_name
         }
         await lightweightRestful.api.put(consts.api.v1.node.node_item(id), params, data)
     },
-    async update_node_content(id, content_id, content_type) {
-        console.log("update_node_content")
-        let params = {
-            action: consts.model.node.action.action_update_node_content
+    async update_name(id, name) {
+        let data = {
+            name: name
         }
+        await this.update_node(id, consts.model.node.action.action_update_node_name, data)
+    },
+    async update_node_content(id, content_id, content_type) {
         let data = {
             content_id: content_id,
             content_type: content_type
         }
-        await lightweightRestful.api.put(consts.api.v1.node.node_item(id), params, data)
+        await this.update_node(id, consts.model.node.action.action_update_node_content, data)
     },
     async remove_node(id) {
         console.log("remove_node")
@@ -34,7 +36,6 @@ export default {
     },
     async move_node(id, before_id, parent_id) {
         console.log("move_node")
-
         let action = consts.model.node.action.action_move_node
         switch (before_id) {
             case "_first_": {
@@ -48,14 +49,13 @@ export default {
                 break
             }
         }
-
-        let params = {
-            action: action
-        }
         let data = {
             before_id: before_id,
             parent: parent_id,
         }
-        await lightweightRestful.api.put(consts.api.v1.node.node_item(id), params, data)
+        await this.update_node(id, action, data)
+    },
+    async reset_node_content(id) {
+        await this.update_node(id, consts.model.node.action.action_reset_node_content, null)
     }
 }

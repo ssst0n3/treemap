@@ -2,9 +2,10 @@ FROM golang:1.15
 COPY . /build
 WORKDIR /build
 RUN GO111MODULE="on" GOPROXY="https://goproxy.io" CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-s -w"
-
-
-
+RUN sed -i "s@http://ftp.debian.org@https://mirrors.huaweicloud.com@g" /etc/apt/sources.list && \
+sed -i "s@http://security.debian.org@https://mirrors.huaweicloud.com@g" /etc/apt/sources.list && \
+apt update && \
+apt install -y upx
 RUN upx treemap
 
 FROM node:14

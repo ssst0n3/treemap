@@ -14,6 +14,7 @@ export default {
   props: {
     root_node_id: Number,
     height: Number,
+    decorate: Function,
   },
   data: function () {
     return {
@@ -92,10 +93,7 @@ export default {
               await api.add_node(parent, name)
               delete this.add_queue[id]
             } else {
-              let new_node = {
-                name: name
-              }
-              await api.update_name(id, new_node)
+              await api.update_name(id, name)
             }
             break
           }
@@ -129,9 +127,10 @@ export default {
       }
     },
     load(node) {
+      let topic = this.decorate(node.name, node.content_type, node.content_id)
       let format = {
         'id': node.id,
-        'topic': node.name,
+        'topic': topic,
         'node_type': node.node_type,
         'children': [],
         'index': node.index
