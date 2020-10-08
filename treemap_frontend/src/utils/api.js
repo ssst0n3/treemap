@@ -13,7 +13,7 @@ export default {
     async update_node(id, action, data) {
         console.log("update_node:", action)
         let params = {
-            action: consts.model.node.action.action_update_node_name
+            action: action
         }
         await lightweightRestful.api.put(consts.api.v1.node.node_item(id), params, data)
     },

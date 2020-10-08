@@ -21,7 +21,7 @@ var NodeResource = lightweight_api.Resource{
 	Name:             "node",
 	TableName:        node.TableNameNode,
 	BaseRelativePath: "/api/v1/node",
-	Model:            node.WithId{},
+	Model:            node.Node{},
 }
 
 func ListRootNodes(c *gin.Context) {

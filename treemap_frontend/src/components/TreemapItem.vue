@@ -37,6 +37,9 @@ export default {
     await this.refresh()
   },
   methods: {
+    node_content_is_init_status(node_id) {
+      return this.$refs.js_mind.jm.mind.nodes[node_id].data.content_type === consts.model.node.content_type.default
+    },
     // 获取选中标签的 ID
     get_selected_node_id() {
       let selected_node = this.$refs.js_mind.jm.get_selected_node();
@@ -60,7 +63,7 @@ export default {
       let is_expander = this.$refs.js_mind.jm.view.is_expander(element)
       if (!is_expander) {
         let node_id = this.$refs.js_mind.jm.view.get_binded_nodeid(element);
-        console.log(node_id)
+        // console.log(node_id)
         this.$emit('js_mind_click_node', node_id)
       }
     },
@@ -133,7 +136,8 @@ export default {
         'topic': topic,
         'node_type': node.node_type,
         'children': [],
-        'index': node.index
+        'index': node.index,
+        'content_type': node.content_type,
       }
       if (node.Sub) {
         node.Sub.forEach(
