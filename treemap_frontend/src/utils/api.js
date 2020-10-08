@@ -17,13 +17,14 @@ export default {
         }
         await lightweightRestful.api.put(consts.api.v1.node.node_item(id), params, data)
     },
-    async update_node_content(id, content_id) {
+    async update_node_content(id, content_id, content_type) {
         console.log("update_node_content")
         let params = {
             action: consts.model.node.action.action_update_node_content
         }
         let data = {
-            content_id: content_id
+            content_id: content_id,
+            content_type: content_type
         }
         await lightweightRestful.api.put(consts.api.v1.node.node_item(id), params, data)
     },
