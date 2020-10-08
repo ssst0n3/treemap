@@ -15,6 +15,10 @@ export default {
     root_node_id: Number,
     height: Number,
     decorate: Function,
+    until: {
+      type: Boolean,
+      required: true
+    }
   },
   data: function () {
     return {
@@ -34,9 +38,24 @@ export default {
   },
   async created() {
     // this.root_node_id = this.$route.params.root_node_id
+    await this.wait_until()
     await this.refresh()
   },
   methods: {
+    sleep(wait) {
+      return new Promise((resolve) => setTimeout(resolve, +wait || 0))
+    },
+    async wait_until(wait = 0) {
+      console.log('waiting:', wait)
+      if (this.until || wait === 8) {
+        console.log('stop wait')
+        return
+      }
+      await this.sleep(100 * Math.pow(2, wait)).then(
+          // await this.wait_until(wait + 1)
+      )
+      await this.wait_until(wait + 1)
+    },
     node_content_is_init_status(node_id) {
       return this.$refs.js_mind.jm.mind.nodes[node_id].data.content_type === consts.model.node.content_type.default
     },
@@ -63,6 +82,9 @@ export default {
       let is_expander = this.$refs.js_mind.jm.view.is_expander(element)
       if (!is_expander) {
         let node_id = this.$refs.js_mind.jm.view.get_binded_nodeid(element);
+        if (node_id) {
+          node_id = this.$refs.js_mind.jm.mind.nodes[node_id].id
+        }
         // console.log(node_id)
         this.$emit('js_mind_click_node', node_id)
       }
@@ -93,8 +115,11 @@ export default {
             let name = data.data[1]
             if (id in this.add_queue) {
               let parent = this.add_queue[id][0]
-              await api.add_node(parent, name)
+              let new_id = await api.add_node(parent, name)
               delete this.add_queue[id]
+              let node = this.$refs.js_mind.jm.mind.nodes[id]
+              node.id = new_id
+              this.$refs.js_mind.jm.mind.nodes[new_id] = node
             } else {
               await api.update_name(id, name)
             }

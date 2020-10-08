@@ -4,11 +4,12 @@ import consts from "@/utils/consts";
 export default {
     async add_node(parent, name) {
         console.log(`add_node: parent=${parent}, name=${name}`)
-        await lightweightRestful.api.post(consts.api.v1.node.child, null, {
+        let response = await lightweightRestful.api.post(consts.api.v1.node.child, null, {
             parent: parent,
             name: name,
             node_type: consts.model.node.node_type.node,
         })
+        return response.id
     },
     async update_node(id, action, data) {
         console.log("update_node:", action)

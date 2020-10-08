@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <!--    <Example/>-->
-    <TreemapItem :height="500" :root_node_id="1" v-on:js_mind_click_node="js_mind_click_node" :decorate="decorate"/>
+    <TreemapItem :until="true" :height="500" :root_node_id="1" v-on:js_mind_click_node="js_mind_click_node" :decorate="decorate"/>
   </div>
 </template>
 

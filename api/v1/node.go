@@ -115,6 +115,7 @@ func UpdateNode(c *gin.Context) {
 		MoveNode(id, action, c)
 	case node.ActionUpdateNodeContent:
 		UpdateContent(id, c)
+	// todo: remove
 	case node.ActionResetNodeContent:
 		ResetContent(id, c)
 	default:
