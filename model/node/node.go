@@ -13,7 +13,8 @@ type Node struct {
 	// common:
 	Description string `json:"description"`
 
-	ContentId uint `json:"content_id"`
+	ContentId   uint `json:"content_id"`
+	ContentType uint `json:"content_type"`
 	// only for leaf:
 	Leaf
 }
@@ -36,6 +37,11 @@ type CreateBody struct {
 type MoveNodeBody struct {
 	Parent   uint `json:"parent"`
 	BeforeId uint `json:"before_id"`
+}
+
+type UpdateNodeContentBody struct {
+	ContentId   uint `json:"content_id"`
+	ContentType uint `json:"content_type"`
 }
 
 const (

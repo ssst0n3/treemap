@@ -1,5 +1,5 @@
-import consts from "@/utils/consts";
 import lightweightRestful from "vue-lightweight_restful";
+import consts from "@/utils/consts";
 
 export default {
     async add_node(parent, name) {
@@ -10,10 +10,20 @@ export default {
             node_type: consts.model.node.node_type.node,
         })
     },
-    async update_node(id, data) {
+    async update_name(id, data) {
         console.log("update_node")
         let params = {
-            action: "update_name"
+            action: consts.model.node.action.action_update_node_name
+        }
+        await lightweightRestful.api.put(consts.api.v1.node.node_item(id), params, data)
+    },
+    async update_node_content(id, content_id) {
+        console.log("update_node_content")
+        let params = {
+            action: consts.model.node.action.action_update_node_content
+        }
+        let data = {
+            content_id: content_id
         }
         await lightweightRestful.api.put(consts.api.v1.node.node_item(id), params, data)
     },
@@ -24,15 +34,15 @@ export default {
     async move_node(id, before_id, parent_id) {
         console.log("move_node")
 
-        let action = "move_node"
+        let action = consts.model.node.action.action_move_node
         switch (before_id) {
             case "_first_": {
-                action = "move_first"
+                action = consts.model.node.action.action_move_node_first
                 before_id = 0
                 break
             }
             case "_last_": {
-                action = "move_last"
+                action = consts.model.node.action.action_move_node_last
                 before_id = 0
                 break
             }

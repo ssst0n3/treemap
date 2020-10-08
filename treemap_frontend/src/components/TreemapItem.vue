@@ -95,7 +95,7 @@ export default {
               let new_node = {
                 name: name
               }
-              await api.update_node(id, new_node)
+              await api.update_name(id, new_node)
             }
             break
           }

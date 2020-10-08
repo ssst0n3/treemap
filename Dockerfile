@@ -1,7 +1,12 @@
-FROM golang:1.14
+FROM golang:1.15
 COPY . /build
 WORKDIR /build
-RUN GO111MODULE="on" GOPROXY="https://goproxy.io" go build
+RUN GO111MODULE="on" GOPROXY="https://goproxy.io" CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-s -w"
+RUN sed -i "s@http://ftp.debian.org@https://mirrors.huaweicloud.com@g" /etc/apt/sources.list && \
+sed -i "s@http://security.debian.org@https://mirrors.huaweicloud.com@g" /etc/apt/sources.list && \
+apt update && \
+apt install -y upx
+RUN upx treemap
 
 FROM node:14
 COPY treemap_frontend /build
@@ -11,7 +16,7 @@ npm cache clean -f && \
 npm install
 RUN npx vue-cli-service build
 
-FROM ubuntu
+FROM alpine
 ENV WAIT_VERSION 2.7.3
 #ADD https://github.com/ufoscout/docker-compose-wait/releases/download/$WAIT_VERSION/wait /wait
 ADD https://st0n3-dev.obs.cn-south-1.myhuaweicloud.com/docker-compose-wait/release/$WAIT_VERSION/wait /wait

@@ -29,6 +29,13 @@ export default {
                 root: 0,
                 node: 1,
                 leaf: 2
+            },
+            action: {
+                action_update_node_name: 'update_name',
+                action_update_node_content: 'update_content',
+                action_move_node: 'move_node',
+                action_move_node_first: 'move_first',
+                action_move_node_last: 'move_last'
             }
         }
     }

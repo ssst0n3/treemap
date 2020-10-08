@@ -8,6 +8,7 @@ import SelectRootNode from "@/components/root_node/SelectRootNode";
 import jm from 'vue-jsmind'
 import consts from "@/utils/consts";
 import util from "@/utils/util";
+import api from "@/utils/api";
 util.InitRestfulClient(consts.BaseUrl)
 Vue.use(jm)
 Vue.use(BootstrapVue)
@@ -35,7 +36,8 @@ const b = {
     install,
     ...components,
     consts,
-    util
+    util,
+    api,
 }
 
 export default b

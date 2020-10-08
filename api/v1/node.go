@@ -132,12 +132,16 @@ func UpdateName(id uint, c *gin.Context) {
 }
 
 func UpdateContent(id uint, c *gin.Context) {
-	var n node.Node
-	if err := c.BindJSON(&n); err != nil {
+	var body node.UpdateNodeContentBody
+	if err := c.BindJSON(&body); err != nil {
 		lightweight_api.HandleStatusBadRequestError(c, err)
 		return
 	}
-	if err := database.Conn.UpdateObjectSingleColumnById(int64(id), node.TableNameNode, node.ColumnNameNodeContentId, n.ContentId); err != nil {
+	//if err := database.Conn.UpdateObjectSingleColumnById(int64(id), node.TableNameNode, node.ColumnNameNodeContentId, n.ContentId); err != nil {
+	//	lightweight_api.HandleInternalServerError(c, err)
+	//	return
+	//}
+	if err := database.Conn.UpdateObject(int64(id), node.TableNameNode, body); err != nil {
 		lightweight_api.HandleInternalServerError(c, err)
 		return
 	}
