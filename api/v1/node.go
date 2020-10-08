@@ -22,6 +22,7 @@ var NodeResource = lightweight_api.Resource{
 	TableName:        node.TableNameNode,
 	BaseRelativePath: "/api/v1/node",
 	Model:            node.Node{},
+	GuidFieldJsonTag: "",
 }
 
 func ListRootNodes(c *gin.Context) {
@@ -48,7 +49,7 @@ func TreeNodes(c *gin.Context) {
 }
 
 func CreateRoot(c *gin.Context) {
-	NodeResource.CreateResource(c, &node.Node{}, "", func(modelPtr interface{}) {
+	NodeResource.CreateResourceTemplate(c, func(modelPtr interface{}) {
 		spew.Dump(modelPtr)
 		n := modelPtr.(*node.Node)
 		if n.NodeType != nodeType.Root {
@@ -74,7 +75,7 @@ func CreateChild(c *gin.Context) {
 		}
 
 		c.Request.Body = ioutil.NopCloser(bytes.NewReader(body))
-		NodeResource.CreateResource(c, &node.Node{}, "", func(modelPtr interface{}) {
+		NodeResource.CreateResourceTemplate(c, func(modelPtr interface{}) {
 			n := modelPtr.(*node.Node)
 			maxIndex, err := database.MaxIndexOfChildren(createBody.Parent)
 			if err != nil {

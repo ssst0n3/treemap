@@ -19,8 +19,9 @@ RUN npx vue-cli-service build
 
 FROM alpine
 ENV WAIT_VERSION 2.7.3
-#ADD https://github.com/ufoscout/docker-compose-wait/releases/download/$WAIT_VERSION/wait /wait
-ADD https://st0n3-dev.obs.cn-south-1.myhuaweicloud.com/docker-compose-wait/release/$WAIT_VERSION/wait /wait
+# ENV WAIT_RELEASE https://github.com/ufoscout/docker-compose-wait/releases/download/$WAIT_VERSION/wait
+ENV WAIT_RELEASE https://st0n3-dev.obs.cn-south-1.myhuaweicloud.com/docker-compose-wait/release/$WAIT_VERSION/wait
+ADD $WAIT_RELEASE /wait
 RUN chmod +x /wait
 
 RUN mkdir -p /app

@@ -10,4 +10,5 @@ var NodeRelationResource = lightweight_api.Resource{
 	TableName:        model.TableNameNodeRelation,
 	BaseRelativePath: "/api/v1/node_relation",
 	Model:            model.NodeRelation{},
+	GuidFieldJsonTag: "",
 }
