@@ -36,8 +36,8 @@ func TestMaxIndexOfChildren(t *testing.T) {
 }
 
 func TestMoveNode(t *testing.T) {
-	beforeId := 10
-	nodeId := 11
+	beforeId := 17
+	nodeId := 18
 	var beforeIndex uint
 	var nodeIndex uint
 	assert.NoError(t, Conn.OrmShowObjectOnePropertyBydIdByReflectBind(node.TableNameNode, node.ColumnNameNodeIndex, int64(beforeId), &beforeIndex))
