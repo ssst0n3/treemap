@@ -49,13 +49,13 @@ func TreeNodes(c *gin.Context) {
 }
 
 func CreateRoot(c *gin.Context) {
-	NodeResource.CreateResourceTemplate(c, func(modelPtr interface{}) {
+	NodeResource.CreateResourceTemplate(c, func(modelPtr interface{}) (err error) {
 		spew.Dump(modelPtr)
 		n := modelPtr.(*node.Node)
 		if n.NodeType != nodeType.Root {
-			lightweight_api.HandleStatusBadRequestError(c, errors.New(fmt.Sprintf(consts.ErrorNodeTypeMustBeTypeRoot, nodeType.Root)))
-			return
+			err = errors.New(fmt.Sprintf(consts.ErrorNodeTypeMustBeTypeRoot, nodeType.Root))
 		}
+		return
 	}, nil)
 }
 
@@ -75,23 +75,19 @@ func CreateChild(c *gin.Context) {
 		}
 
 		c.Request.Body = ioutil.NopCloser(bytes.NewReader(body))
-		NodeResource.CreateResourceTemplate(c, func(modelPtr interface{}) {
+		NodeResource.CreateResourceTemplate(c, func(modelPtr interface{}) (err error) {
 			n := modelPtr.(*node.Node)
-			maxIndex, err := database.MaxIndexOfChildren(createBody.Parent)
-			if err != nil {
-				lightweight_api.HandleInternalServerError(c, err)
-				return
-			}
+			var maxIndex int
+			maxIndex, err = database.MaxIndexOfChildren(createBody.Parent)
 			n.Index = maxIndex + 1
-		}, func(id int64) {
+			return
+		}, func(id int64) (err error) {
 			nodeRelation := model.NodeRelation{
 				Parent: createBody.Parent,
 				Child:  uint(id),
 			}
-			if _, err := database.Conn.CreateObject(model.TableNameNodeRelation, nodeRelation); err != nil {
-				lightweight_api.HandleInternalServerError(c, err)
-				return
-			}
+			_, err = database.Conn.CreateObject(model.TableNameNodeRelation, nodeRelation)
+			return
 		})
 	}
 }
@@ -106,7 +102,7 @@ func UpdateNode(c *gin.Context) {
 	action := c.Query("action")
 	switch action {
 	case node.ActionUpdateNodeName:
-		UpdateName(id, c)
+		NodeResource.UpdateResourceTemplate(c, node.UpdateNodeNameBody{}, nil)
 	case node.ActionMoveNode:
 		MoveNode(id, action, c)
 	case node.ActionMoveNodeFirst:
@@ -114,47 +110,9 @@ func UpdateNode(c *gin.Context) {
 	case node.ActionMoveNodeLast:
 		MoveNode(id, action, c)
 	case node.ActionUpdateNodeContent:
-		UpdateContent(id, c)
-	// todo: remove
-	case node.ActionResetNodeContent:
-		ResetContent(id, c)
+		NodeResource.UpdateResourceTemplate(c, node.UpdateNodeContentBody{}, nil)
 	default:
 		lightweight_api.HandleStatusBadRequestError(c, errors.New(fmt.Sprintf("action: %s not valid", action)))
-	}
-}
-
-func UpdateName(id uint, c *gin.Context) {
-	var n node.Node
-	if err := c.BindJSON(&n); err != nil {
-		lightweight_api.HandleStatusBadRequestError(c, err)
-		return
-	}
-	if err := database.Conn.UpdateObjectSingleColumnById(int64(id), node.TableNameNode, node.ColumnNameNodeName, n.Name); err != nil {
-		lightweight_api.HandleInternalServerError(c, err)
-		return
-	}
-}
-
-func UpdateContent(id uint, c *gin.Context) {
-	var body node.UpdateNodeContentBody
-	if err := c.BindJSON(&body); err != nil {
-		lightweight_api.HandleStatusBadRequestError(c, err)
-		return
-	}
-	if err := database.Conn.UpdateObject(int64(id), node.TableNameNode, body); err != nil {
-		lightweight_api.HandleInternalServerError(c, err)
-		return
-	}
-}
-
-func ResetContent(id uint, c *gin.Context) {
-	content := node.UpdateNodeContentBody{
-		ContentId:   0,
-		ContentType: 0,
-	}
-	if err := database.Conn.UpdateObject(int64(id), node.TableNameNode, content); err != nil {
-		lightweight_api.HandleInternalServerError(c, err)
-		return
 	}
 }
 

@@ -39,6 +39,10 @@ type MoveNodeBody struct {
 	BeforeId uint `json:"before_id"`
 }
 
+type UpdateNodeNameBody struct {
+	Name string `json:"name"`
+}
+
 type UpdateNodeContentBody struct {
 	ContentId   uint `json:"content_id"`
 	ContentType uint `json:"content_type"`
@@ -57,7 +61,6 @@ const (
 	ActionMoveNode          = "move_node"
 	ActionMoveNodeFirst     = "move_first"
 	ActionMoveNodeLast      = "move_last"
-	ActionResetNodeContent  = "reset_content"
 )
 
 func (r *Recursive) Tree(getChildrenFunc func(id uint) ([]Recursive, error)) (err error) {
