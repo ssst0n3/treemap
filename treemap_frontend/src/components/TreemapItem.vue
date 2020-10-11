@@ -70,7 +70,7 @@ export default {
     },
     async refresh() {
       let response = await lightweightRestful.api.get(consts.api.v1.node.tree(this.root_node_id), null, this, 'please login first.')
-      if (response.success === true) {
+      if (response.success !== false) {
         this.tree = response
       } else {
         return
