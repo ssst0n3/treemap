@@ -69,7 +69,12 @@ export default {
       }
     },
     async refresh() {
-      this.tree = await lightweightRestful.api.get(consts.api.v1.node.tree(this.root_node_id), null, this)
+      let response = await lightweightRestful.api.get(consts.api.v1.node.tree(this.root_node_id), null, this, 'please login first.')
+      if (response.success === true) {
+        this.tree = response
+      } else {
+        return
+      }
       this.mind.data = this.load(this.tree)
       this.refresh_key++
       this.$nextTick(() => {
