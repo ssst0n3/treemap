@@ -9,9 +9,12 @@ import jm from 'vue-jsmind'
 import consts from "@/utils/consts";
 import util from "@/utils/util";
 import api from "@/utils/api";
+import lightweightRestful from 'vue-lightweight_restful'
+
 util.InitRestfulClient(consts.BaseUrl)
 Vue.use(jm)
 Vue.use(BootstrapVue)
+Vue.use(lightweightRestful)
 
 const components = [
     TreemapItem,

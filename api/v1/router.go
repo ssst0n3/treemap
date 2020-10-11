@@ -18,8 +18,8 @@ func InitRouter(router *gin.Engine) {
 	}
 }
 
-func InitRouterWithJwtAdmin(router *gin.Engine) {
-	nodeGroup := router.Group(NodeResource.BaseRelativePath, middleware.JwtAdmin())
+func InitRouterWithJwtUser(router *gin.Engine) {
+	nodeGroup := router.Group(NodeResource.BaseRelativePath, middleware.JwtUser())
 	{
 		nodeGroup.GET("/root", ListRootNodes)
 		nodeGroup.GET("/root/:id", TreeNodes)
