@@ -10,12 +10,14 @@ apt install -y upx
 RUN upx treemap
 
 FROM node:14
+ENV NPM_REGISTRY https://mirrors.huaweicloud.com/repository/npm/
+ENV NPM_REGISTRY https://registry.npm.taobao.org
 COPY treemap_frontend /build
 WORKDIR /build
-RUN npm config set registry https://mirrors.huaweicloud.com/repository/npm/ && \
+RUN npm config set registry $NPM_REGISTRY && \
 npm cache clean -f && \
 npm install
-RUN npx vue-cli-service build
+RUN npm run-script build
 
 FROM alpine
 ENV WAIT_VERSION 2.7.3

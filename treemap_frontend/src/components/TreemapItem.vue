@@ -111,7 +111,7 @@ export default {
             } else {
               let parent = data.data[0]
               let name = data.data[2]
-              await api.add_node(parent, name)
+              await api.add_node(parent, name, this)
             }
             break
           }
@@ -120,26 +120,26 @@ export default {
             let name = data.data[1]
             if (id in this.add_queue) {
               let parent = this.add_queue[id][0]
-              let new_id = await api.add_node(parent, name)
+              let new_id = await api.add_node(parent, name, this)
               delete this.add_queue[id]
               let node = this.$refs.js_mind.jm.mind.nodes[id]
               node.id = new_id
               this.$refs.js_mind.jm.mind.nodes[new_id] = node
             } else {
-              await api.update_name(id, name)
+              await api.update_name(id, name, this)
             }
             break
           }
           case "remove_node": {
             let id = data.data[0]
-            await api.remove_node(id)
+            await api.remove_node(id, this)
             break
           }
           case "move_node": {
             let node_id = data.data[0]
             let before_id = data.data[1]
             let parent_id = data.data[2]
-            await api.move_node(node_id, before_id, parent_id)
+            await api.move_node(node_id, before_id, parent_id, this)
             break
           }
         }
@@ -156,7 +156,7 @@ export default {
         this.add_queue[id] = data.data
       } else {
         let name = data.data[2]
-        await api.add_node(parent, name)
+        await api.add_node(parent, name, this)
       }
     },
     load(node) {

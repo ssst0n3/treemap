@@ -36,7 +36,6 @@ export default {
                 action_move_node: 'move_node',
                 action_move_node_first: 'move_first',
                 action_move_node_last: 'move_last',
-                action_reset_node_content: 'reset_content'
             },
             content_type: {
                 default: 0
