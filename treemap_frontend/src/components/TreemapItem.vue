@@ -41,8 +41,19 @@ export default {
     // this.root_node_id = this.$route.params.root_node_id
     await this.wait_until()
     await this.refresh()
+    let node = this.get_node_by_id(1)
+    node.data = {}
+    this.refresh_node(node)
   },
   methods: {
+    get_node_by_id(node_id) {
+      return this.$refs.js_mind.jm.mind.nodes[node_id]
+    },
+    refresh_node(node) {
+      this.$refs.js_mind.jm.view.update_node(node)
+      this.$refs.js_mind.jm.layout.layout();
+      this.$refs.js_mind.jm.view.show(false);
+    },
     sleep(wait) {
       return new Promise((resolve) => setTimeout(resolve, +wait || 0))
     },
@@ -70,7 +81,9 @@ export default {
       }
     },
     async refresh() {
-      let response = await lightweightRestful.api.get(consts.api.v1.node.tree(this.root_node_id), null, this, 'please login first.')
+      let response = await lightweightRestful.api.get(consts.api.v1.node.tree(this.root_node_id), null, {
+        caller: this, error_msg: "please login first."
+      })
       if (response.success !== false) {
         this.tree = response
       } else {
@@ -96,6 +109,7 @@ export default {
       }
     },
     async jm_listener(type, data) {
+      console.log("jm_listener triggered: ", type)
       if (type === consts.jm.type.edit) {
         switch (data.evt) {
           case "insert_node_after": {
