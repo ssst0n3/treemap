@@ -41,9 +41,6 @@ export default {
     // this.root_node_id = this.$route.params.root_node_id
     await this.wait_until()
     await this.refresh()
-    let node = this.get_node_by_id(1)
-    node.data = {}
-    this.refresh_node(node)
   },
   methods: {
     get_node_by_id(node_id) {
