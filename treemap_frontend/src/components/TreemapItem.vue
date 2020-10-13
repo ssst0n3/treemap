@@ -180,6 +180,7 @@ export default {
         'children': [],
         'index': node.index,
         'content_type': node.content_type,
+        'name': node.name,
       }
       if (node.Sub) {
         node.Sub.forEach(
