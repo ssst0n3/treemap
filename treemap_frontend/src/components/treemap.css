@@ -1,0 +1,8 @@
+jmnode {
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+}
+jmnodes {
+    min-width: 420px;
+}

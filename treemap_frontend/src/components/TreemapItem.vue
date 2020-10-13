@@ -8,6 +8,7 @@
 import lightweightRestful from 'vue-lightweight_restful'
 import consts from "@/utils/consts";
 import api from "@/utils/api";
+import './treemap.css'
 
 export default {
   name: "TreemapItem",
@@ -183,5 +184,4 @@ export default {
 </script>
 
 <style scoped>
-
 </style>
