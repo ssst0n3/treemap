@@ -106,7 +106,7 @@ export default {
       }
     },
     async jm_listener(type, data) {
-      console.log("jm_listener triggered: ", type)
+      // console.log("jm_listener triggered: ", type)
       if (type === consts.jm.type.edit) {
         switch (data.evt) {
           case "insert_node_after": {
