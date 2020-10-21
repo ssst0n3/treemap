@@ -1,6 +1,5 @@
 <template>
     <div>
-        {{node_selected === null ? 'empty' : node_selected.id }}
         <js-mind :key="refresh_key" :values="mind" :height="`${height}px`" ref="js_mind"/>
     </div>
 </template>
