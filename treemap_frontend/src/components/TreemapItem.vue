@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-btn @click="compress_btn_clicked"><i :class="compress?'fas fa-compress-alt':'fas fa-expand-alt'"></i></b-btn>
+    <b-btn @click="compress_btn_clicked" class="ml-3"><i :class="compress?'fas fa-compress-alt':'fas fa-expand-alt'"></i></b-btn>
     <js-mind :key="refresh_key" :values="mind" :height="`${height}px`" ref="js_mind"/>
   </div>
 </template>
