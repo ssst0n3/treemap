@@ -24,7 +24,6 @@ services:
     image: mysql
     command: --default-authentication-plugin=mysql_native_password
     container_name: treemap_db_db
-    restart: always
     volumes:
       - ./treemap_db/init.sql:/docker-entrypoint-initdb.d/init.sql
       - treemap_db:/var/lib/mysql
@@ -41,7 +40,6 @@ services:
       - db
     image: adminer
     container_name: treemap_db_adminer
-    restart: always
     ports:
       - "12002:8080"
 
