@@ -95,12 +95,12 @@ func MinIndexOfChildren(id uint) (int, error) {
 
 func MoveNode(beforeId uint, nodeId uint) error {
 	var beforeIndex int
-	if err := Conn.OrmShowObjectOnePropertyBydIdByReflectBind(node.TableNameNode, node.ColumnNameNodeIndex, int64(beforeId), &beforeIndex); err != nil {
+	if err := Conn.OrmShowObjectOnePropertyByIdByReflectBind(node.TableNameNode, node.ColumnNameNodeIndex, int64(beforeId), &beforeIndex); err != nil {
 		awesome_error.CheckErr(err)
 		return err
 	}
 	var nodeIndex uint
-	if err := Conn.OrmShowObjectOnePropertyBydIdByReflectBind(node.TableNameNode, node.ColumnNameNodeIndex, int64(nodeId), &nodeIndex); err != nil {
+	if err := Conn.OrmShowObjectOnePropertyByIdByReflectBind(node.TableNameNode, node.ColumnNameNodeIndex, int64(nodeId), &nodeIndex); err != nil {
 		awesome_error.CheckErr(err)
 		return err
 	}

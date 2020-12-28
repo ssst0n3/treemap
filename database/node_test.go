@@ -40,11 +40,11 @@ func TestMoveNode(t *testing.T) {
 	nodeId := 18
 	var beforeIndex uint
 	var nodeIndex uint
-	assert.NoError(t, Conn.OrmShowObjectOnePropertyBydIdByReflectBind(node.TableNameNode, node.ColumnNameNodeIndex, int64(beforeId), &beforeIndex))
-	assert.NoError(t, Conn.OrmShowObjectOnePropertyBydIdByReflectBind(node.TableNameNode, node.ColumnNameNodeIndex, int64(nodeId), &nodeIndex))
+	assert.NoError(t, Conn.OrmShowObjectOnePropertyByIdByReflectBind(node.TableNameNode, node.ColumnNameNodeIndex, int64(beforeId), &beforeIndex))
+	assert.NoError(t, Conn.OrmShowObjectOnePropertyByIdByReflectBind(node.TableNameNode, node.ColumnNameNodeIndex, int64(nodeId), &nodeIndex))
 	log.Logger.Info(beforeIndex, nodeIndex)
 	assert.NoError(t, MoveNode(uint(beforeId), uint(nodeId)))
-	assert.NoError(t, Conn.OrmShowObjectOnePropertyBydIdByReflectBind(node.TableNameNode, node.ColumnNameNodeIndex, int64(beforeId), &beforeIndex))
-	assert.NoError(t, Conn.OrmShowObjectOnePropertyBydIdByReflectBind(node.TableNameNode, node.ColumnNameNodeIndex, int64(nodeId), &nodeIndex))
+	assert.NoError(t, Conn.OrmShowObjectOnePropertyByIdByReflectBind(node.TableNameNode, node.ColumnNameNodeIndex, int64(beforeId), &beforeIndex))
+	assert.NoError(t, Conn.OrmShowObjectOnePropertyByIdByReflectBind(node.TableNameNode, node.ColumnNameNodeIndex, int64(nodeId), &nodeIndex))
 	log.Logger.Info(beforeIndex, nodeIndex)
 }
