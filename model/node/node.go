@@ -49,11 +49,12 @@ type UpdateNodeContentBody struct {
 }
 
 const (
-	TableNameNode           = "node"
-	ColumnNameNodeName      = "name"
-	ColumnNameNodeContentId = "content_id"
-	ColumnNameNodeNodeType  = "node_type"
-	ColumnNameNodeIndex     = "index"
+	TableNameNode             = "node"
+	ColumnNameNodeName        = "name"
+	ColumnNameNodeContentId   = "content_id"
+	ColumnNameNodeContentType = "content_type"
+	ColumnNameNodeNodeType    = "node_type"
+	ColumnNameNodeIndex       = "index"
 )
 const (
 	ActionUpdateNodeName    = "update_name"
