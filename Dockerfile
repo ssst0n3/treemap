@@ -1,21 +1,21 @@
-FROM golang:1.15
-#ARG DEBIAN_MIRROR="huaweicloud"
-ARG DEBIAN_MIRROR="aliyun"
+FROM golang:1.15-alpine
+#ENV GOPROXY="https://proxy.golang.org"
+#ENV GOPROXY="https://goproxy.io,direct"
+ENV GOPROXY="https://goproxy.cn,direct"
+#ENV GOPROXY="https://mirrors.aliyun.com/goproxy/"
+#ENV GOPROXY="https://gocenter.io"
 COPY . /build
 WORKDIR /build
-RUN GO111MODULE="on" GOPROXY="https://goproxy.io" CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-s -w"
-RUN sed -i "s@http://ftp.debian.org@https://mirrors.$DEBIAN_MIRROR.com@g" /etc/apt/sources.list && \
-sed -i "s@http://security.debian.org@https://mirrors.$DEBIAN_MIRROR.com@g" /etc/apt/sources.list && \
-sed -i "s@http://deb.debian.org@https://mirrors.$DEBIAN_MIRROR.com@g" /etc/apt/sources.list && \
-apt update && \
-apt install -y upx
+RUN GO111MODULE="on" GOPROXY=$GOPROXY CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-s -w"
+RUN sed -i "s@http://dl-cdn.alpinelinux.org/@https://mirrors.huaweicloud.com/@g" /etc/apk/repositories
+RUN apk update && apk add upx
 RUN upx treemap
 
-FROM node:14
+FROM node:14-slim AS frontend
 ENV NPM_REGISTRY https://mirrors.huaweicloud.com/repository/npm/
 ENV NPM_REGISTRY https://registry.npm.taobao.org
-COPY treemap_frontend /build
-WORKDIR /build
+COPY treemap_frontend /frontend
+WORKDIR /frontend
 RUN npm config set registry $NPM_REGISTRY && \
 npm cache clean -f && \
 npm install
@@ -30,7 +30,7 @@ RUN chmod +x /wait
 
 RUN mkdir -p /app
 COPY --from=0 /build/treemap /app/
-COPY --from=1 /build/dist /app/dist
+COPY --from=1 /frontend/dist /app/dist
 #COPY file_server /app/file_server
 WORKDIR /app
 CMD /wait && ./treemap

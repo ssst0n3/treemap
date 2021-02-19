@@ -10,6 +10,12 @@ import (
 	"testing"
 )
 
+func TestQueryAfterWhichNode(t *testing.T) {
+	afterId, _, err := QueryAfterWhichNode(19)
+	assert.NoError(t, err)
+	log.Logger.Info(afterId)
+}
+
 func TestListRootNodes(t *testing.T) {
 	spew.Dump(ListRootNodes())
 }
